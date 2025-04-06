@@ -1,31 +1,41 @@
 import Text "mo:base/Text";
-import Array "mo:base/Array";
 import Time "mo:base/Time";
+import Buffer "mo:base/Buffer";
+import Nat "mo:base/Nat";
 
 actor {
   type Comment = {
-    text: Text;
-    time: Time.Time;
+    message: Text;
+    date: Time.Time;
   };
 
-  var comments: [Comment] = [];
+  var comments = Buffer.Buffer<Comment>(0);
 
-  public func addComment(text: Text) : async Bool {
-    let currentTime = Time.now();  
+  public func getComments(): async [Comment] {
+    return Buffer.toArray(comments);
+  };
+
+  public func addComment(message: Text): async Bool {
+    let currentTime = Time.now() ;
     let newComment: Comment = {
-      text = text;
-      time = currentTime;
+      message = message;
+      date = currentTime;
     };
-    comments := Array.append(comments, [newComment]);  
-    return true;
+    comments.add(newComment);
+    return true; 
   };
 
-  public func getComments() : async [Comment] {
-    return comments;
-  };
-
-  public func resetComments() : async Bool {
-      comments := [];
+  public func removeComment(index: Nat): async Bool {
+    if (index < comments.size()) {
+      ignore comments.remove(index);
       return true;
+    } else {
+      return false;
+    }
   };
-};
+
+  public func resetComments(): async Bool {
+    comments := Buffer.Buffer<Comment>(0);
+    return true;
+  }
+}

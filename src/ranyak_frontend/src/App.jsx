@@ -5,6 +5,8 @@ function App() {
   const [comments, setComments] = useState([]);
   const [newComment, setNewComment] = useState("");
   const [loading, setLoading] = useState(true);
+  const [isSending, setIsSending] = useState(false);
+
   const lastMessage = useRef(null);
 
   useEffect(() => {
@@ -28,9 +30,11 @@ function App() {
   const handleAddComment = async () => {
     if (newComment.trim() !== "") {
       try {
+        setIsSending(true);
         await ranyak_backend.addComment(newComment);
         setNewComment("");
         fetchComments();
+        setIsSending(false);
       } catch (error) {
         console.error("Error adding comment:", error);
       }
@@ -39,11 +43,8 @@ function App() {
 
   return (
     <main>
-      <div className="card flex" style={{ gap: "3rem" }}>
-        <div
-          className="flex flex-col"
-          style={{ justifyContent: "space-between", gap: "10px" }}
-        >
+      <div className="card flex" style={{ gap: "2rem" }}>
+        <div className="avatar-container flex flex-col">
           <div className="avatar">
             <img src="image.jpg" alt="A picture of Caenar" />
           </div>
@@ -99,12 +100,12 @@ function App() {
               style={{ gap: "1rem", marginTop: "1.2rem" }}
             >
               <p>
-                I'm a second-year BSIT student at Divine Word College of
-                Legazpi, majoring in Web Development. I enjoy solving problems
-                and diving deep into the lower levels of programming. I've built
-                several hobby projects to sharpen my skills and grow my
-                portfolio. Right now, my goal is to deepen my understanding of
-                web development as a whole, then branch out into other areas
+                I'm currently a second-year BSIT student at Divine Word College
+                of Legazpi, majoring in Web Development. I enjoy solving
+                problems and diving deep into the lower levels of programming.
+                I've built several hobby projects to sharpen my skills and grow
+                my portfolio. Right now, my goal is to deepen my understanding
+                of web development as a whole, then branch out into other areas
                 like low-level and functional programming.
               </p>
 
@@ -139,22 +140,22 @@ function App() {
               <li key={index} className="chat-container" ref={lastMessage}>
                 <p className="date">
                   {new Date(
-                    Number(comment.time) / 1000000,
+                    Number(comment.date) / 1000000,
                   ).toLocaleString()}{" "}
                 </p>
-                <p>{comment.text}</p>
+                <p>{comment.message}</p>
               </li>
             ))
           )}
         </ul>
         <div className="input-container">
-          <input
+          <textarea
             type="text"
-            placeholder="Send a message, don't worry it's anonymous"
-            value={newComment}
+            placeholder="Send an anonymous message"
+            value={isSending ? "Sending.." : newComment}
             onChange={(e) => setNewComment(e.target.value)}
-          />
-          <button type="submit" onClick={handleAddComment}>
+          ></textarea>
+          <button type="submit" onClick={handleAddComment} disabled={isSending}>
             <i className="fa-solid fa-paper-plane"></i>
           </button>
         </div>
