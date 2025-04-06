@@ -16,12 +16,8 @@
       "type": "motoko"
     },
     "ranyak_frontend": {
-      "dependencies": [
-        "ranyak_backend"
-      ],
-      "source": [
-        "src/ranyak_frontend/dist"
-      ],
+      "dependencies": ["ranyak_backend"],
+      "source": ["src/ranyak_frontend/dist"],
       "type": "assets",
       "workspace": "ranyak_frontend"
     }
@@ -33,5 +29,10 @@
     }
   },
   "output_env_file": ".env",
-  "version": 1
+  "version": 1,
+  "metadata": [
+    {
+      "name": "candid:service"
+    }
+  ]
 }
